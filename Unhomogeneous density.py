@@ -149,10 +149,6 @@ for j in range(0,photons) :
         if z_trajectories[j,n]==0:
             z_trajectories[j,n]=np.nan
     
-#x_trajectories[ x_trajectories==0 ] = np.nan
-#y_trajectories[ y_trajectories==0 ] = np.nan
-#z_trajectories[ z_trajectories==0 ] = np.nan
-
 #Trajectories
 for l in range(0,photons) : 
     ax.plot(x_trajectories[l,],y_trajectories[l,],z_trajectories[l,])

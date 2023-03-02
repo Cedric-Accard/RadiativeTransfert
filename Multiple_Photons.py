@@ -2,7 +2,7 @@
 """
 Created on Tue Feb 21 14:10:07 2023
 
-@author: Cédric
+@author: Cédric & Jhanene
 """
 
 
@@ -10,9 +10,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from skspatial.objects import Sphere
 
-plt.close()
 
-photons=50 #Numbers of photons
+photons=500 #Numbers of photons
+r,r1,r2=0,0,0
+
+R=200.  #Radius of the sphere
+j=0 
+
+origin=[1e-200,1e-200,1e-200] #Source Origin 
 
 #Initialization of arrays for telescope projection 
 z_image=np.zeros(photons)
@@ -24,13 +29,6 @@ y_trajectories=np.zeros(shape=(photons,100))
 z_trajectories=np.zeros(shape=(photons,100))
 
 
-
-r,r1,r2=0,0,0
-
-R=200.  #Radius of the sphere
-j=0 
-
-origin=[1e-200,1e-200,1e-200] #Source Origin 
 
 for j in range(photons) : #For each particle do the scattering loop
     
@@ -116,7 +114,7 @@ for j in range(photons) : #For each particle do the scattering loop
             ratio_norm=(R-norm2)/diff_norm
         
             for i in range (0,3):
-                rightpos[0,i]=pos2[0,i]+ratio*dire[0,i]    #Correction to the position to get backward as close as possible to the limit of the object
+                rightpos[0,i]=pos2[0,i]+ratio_norm*dire[0,i]    #Correction to the position to get backward as close as possible to the limit of the object
             
             x2=np.append(x2,rightpos[0,0]) # Adding the position to a list to keep track of them
             y2=np.append(y2,rightpos[0,1]) # 
@@ -126,17 +124,25 @@ for j in range(photons) : #For each particle do the scattering loop
     
     final_pos=rightpos # Last position of the particle at the limit of the object
     final_dir=dire # Last direction of the particle at the limit of the object
-        
 
-    z_image[j]=final_pos[0,2]  #Z projection of the particle postion 
+
+    final_norm_dir=np.sqrt(final_dir[0,0]**2+final_dir[0,1]**2+final_dir[0,2]**2)
     
     
-    phi=np.arctan(final_pos[0,1]/final_pos[0,0]) #Definition of the phi angle
-    theta=np.arctan(z_image[j]/final_norm) ##Definition of the theta angle
-    beta=np.arctan(final_dir[0,1]/final_dir[0,0]) #Definition of the beta angle
+    theta=np.arccos(final_pos[0,2]/final_norm) ##Definition of the theta angle
+
+    #phi=np.arctan(final_pos[0,1]/final_pos[0,0]) #Definition of the phi angle
+    #if( final_dir[0,1] < 0 and final_dir[0,0] < 0 ): 
+        #phi -= np.pi
+    #if( final_dir[0,1] > 0 and final_dir[0,0] < 0 ): 
+        #phi += np.pi
+
+    phi=np.arctan2(final_pos[0,1], final_pos[0,0])        
+
+    x_image[j]=final_norm*np.cos(phi)*np.sin(theta) #Donne pas un disque ##Definition of the horizontal offset
+    z_image[j]=final_norm*np.sin(phi)*np.sin(theta)  #Z projection of the particle postion     
+
     
-    x_image[j]=final_norm*np.sin(beta-phi)*np.cos(theta) ##Definition of the horizontal offset
-        
     for k in range(len(x2)):
         x_trajectories[j,k]=x2[k]
     for k in range(len(y2)):
@@ -146,18 +152,21 @@ for j in range(photons) : #For each particle do the scattering loop
 
 fig = plt.figure(figsize=plt.figaspect(2.))
 
+#Ploting the sphere and the trajectories
 ax = fig.add_subplot(1,2,1 , projection='3d')
 ax.grid()
 
+#Remove useless points
 x_trajectories[ x_trajectories==0 ] = np.nan
 y_trajectories[ y_trajectories==0 ] = np.nan
 z_trajectories[ z_trajectories==0 ] = np.nan
 
+#Trajectories
 for l in range(0,photons-1) : 
     ax.plot(x_trajectories[l,],y_trajectories[l,],z_trajectories[l,])
     
-    
 ax.set_title('many particle diffusion 3D Plot')
+#Sphere
 sphere = Sphere([origin[0], origin[1], origin[2]], 200)
 sphere.plot_3d(ax, alpha=0.2)
 sphere.point.plot_3d(ax, s=100)
@@ -167,13 +176,14 @@ ax.set_xlabel('x', labelpad=20)
 ax.set_ylabel('y', labelpad=20)
 ax.set_zlabel('z', labelpad=20)
 
+#Telescope
 ax = fig.add_subplot(1, 2, 2)
 ax.scatter(x_image,z_image,  marker=".")
 
-yabs_max = abs(max(ax.get_ylim(), key=abs))
+yabs_max = 600 #abs(max(ax.get_ylim(), key=abs))
 ax.set_ylim(ymin=-yabs_max, ymax=yabs_max)
 
-xabs_max = abs(max(ax.get_xlim(), key=abs))
+xabs_max = 600 #abs(max(ax.get_xlim(), key=abs))
 ax.set_xlim(xmin=-xabs_max, xmax=xabs_max)
 
 plt.show()      

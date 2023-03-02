@@ -11,11 +11,8 @@ import matplotlib.pyplot as plt
 from skspatial.objects import Sphere
 
 
-photons=500 #Numbers of photons
-r,r1,r2=0,0,0
-
-R=200.  #Radius of the sphere
-j=0 
+photons=5 #Numbers of photons
+R=200  #Radius of the sphere
 
 origin=[1e-200,1e-200,1e-200] #Source Origin 
 
@@ -123,24 +120,13 @@ for j in range(photons) : #For each particle do the scattering loop
         final_norm=np.sqrt(rightpos[0,0]**2+rightpos[0,1]**2+rightpos[0,2]**2) #Last norm 
     
     final_pos=rightpos # Last position of the particle at the limit of the object
-    final_dir=dire # Last direction of the particle at the limit of the object
-
-
-    final_norm_dir=np.sqrt(final_dir[0,0]**2+final_dir[0,1]**2+final_dir[0,2]**2)
-    
+    final_dir=dire # Last direction of the particle at the limit of the object    
     
     theta=np.arccos(final_pos[0,2]/final_norm) ##Definition of the theta angle
-
-    #phi=np.arctan(final_pos[0,1]/final_pos[0,0]) #Definition of the phi angle
-    #if( final_dir[0,1] < 0 and final_dir[0,0] < 0 ): 
-        #phi -= np.pi
-    #if( final_dir[0,1] > 0 and final_dir[0,0] < 0 ): 
-        #phi += np.pi
-
     phi=np.arctan2(final_pos[0,1], final_pos[0,0])        
 
-    x_image[j]=final_norm*np.cos(phi)*np.sin(theta) #Donne pas un disque ##Definition of the horizontal offset
-    z_image[j]=final_norm*np.sin(phi)*np.sin(theta)  #Z projection of the particle postion     
+    x_image[j]=final_norm*np.cos(phi)*np.sin(theta) #Definition of the horizontal offset
+    z_image[j]=final_pos[0,2] #final_norm*np.sin(phi)*np.sin(theta) #Z projection of the particle postion     
 
     
     for k in range(len(x2)):
@@ -162,7 +148,7 @@ y_trajectories[ y_trajectories==0 ] = np.nan
 z_trajectories[ z_trajectories==0 ] = np.nan
 
 #Trajectories
-for l in range(0,photons-1) : 
+for l in range(0,photons) : 
     ax.plot(x_trajectories[l,],y_trajectories[l,],z_trajectories[l,])
     
 ax.set_title('many particle diffusion 3D Plot')
@@ -180,11 +166,14 @@ ax.set_zlabel('z', labelpad=20)
 ax = fig.add_subplot(1, 2, 2)
 ax.scatter(x_image,z_image,  marker=".")
 
-yabs_max = 600 #abs(max(ax.get_ylim(), key=abs))
+yabs_max = abs(max(ax.get_ylim(), key=abs))
 ax.set_ylim(ymin=-yabs_max, ymax=yabs_max)
 
-xabs_max = 600 #abs(max(ax.get_xlim(), key=abs))
+xabs_max = abs(max(ax.get_xlim(), key=abs))
 ax.set_xlim(xmin=-xabs_max, xmax=xabs_max)
+ax.set_box_aspect(1)
+ax.set_title('Telescope view of the object')
+
 
 plt.show()      
     

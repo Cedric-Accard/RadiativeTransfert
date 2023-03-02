@@ -22,8 +22,6 @@ x_trajectories=np.zeros(shape=(photons,R))
 y_trajectories=np.zeros(shape=(photons,R))
 z_trajectories=np.zeros(shape=(photons,R))
 
-r,r1,r2=0,0,0
-
 ## Density distribution ##
 n=np.zeros(R+int(0.1*R)) 
 nc=1 #Central Density number

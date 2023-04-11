@@ -2,16 +2,17 @@
 """
 Created on Mon Jan 30 14:32:09 2023
 
-@author: Cédric
+@author: Cédric & Jhanene
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
-plt.style.use('seaborn-poster')
-#from mpl_toolkits.mplot3d import Axes3D
 from skspatial.objects import Sphere
 
-plt.close()
+plt.close('all')
+
+
+R=200  #Radius of the sphere
 
 pos=np.zeros((1,3))
 pos2=np.zeros((1,3))
@@ -23,9 +24,6 @@ final_dir=np.zeros((1,3))
 
 
 
-r,r1,r2=0,0,0
-
-R=200.  #Radius of the sphere
 norm = 0
 count=0
 x2 = np.array([])
@@ -66,7 +64,7 @@ while (norm<=R) :
                 pos[0,i]=pos[0,i]+dire[0,i]
 
             norm=np.sqrt(pos[0,0]**2+pos[0,1]**2+pos[0,2]**2)
-            ts=ts+(n*sigma + n*sigma)*dl/2
+            ts+=(n*sigma + n*sigma)*dl/2
             norm_arr=np.append(norm_arr,norm)
         else :
             break
@@ -109,21 +107,14 @@ while (norm<=R) :
 final_pos=rightpos
 final_dir=dire
         
-z_image=final_pos[0,2]
-phi=np.arctan(final_pos[0,1]/final_pos[0,0])
-theta=np.arctan(z_image/final_norm)
-beta=np.arctan(final_dir[0,1]/final_dir[0,0])
-x_image=final_norm*np.sin(beta-phi)*np.cos(theta)
+fig = plt.figure(figsize=plt.figaspect(1.))
 
-
-fig = plt.figure(figsize=plt.figaspect(2.))
-
-ax = fig.add_subplot(2,1,1 , projection='3d')
+ax = fig.add_subplot(1,1,1 , projection='3d')
 ax.grid()
 
 ax.plot(x2,y2,z2)
 ax.set_title('1 particle diffusion 3D Plot')
-sphere = Sphere([0, 0, 0], 200)
+sphere = Sphere([0, 0, 0], R)
 sphere.plot_3d(ax, alpha=0.2)
 sphere.point.plot_3d(ax, s=100)
 
@@ -131,16 +122,6 @@ sphere.point.plot_3d(ax, s=100)
 ax.set_xlabel('x', labelpad=20)
 ax.set_ylabel('y', labelpad=20)
 ax.set_zlabel('z', labelpad=20)
-
-ax = fig.add_subplot(2, 1, 2)
-ax.plot(x_image,z_image,  marker=".")
-
-yabs_max = abs(max(ax.get_ylim(), key=abs))
-ax.set_ylim(ymin=-yabs_max, ymax=yabs_max)
-
-xabs_max = abs(max(ax.get_xlim(), key=abs))
-ax.set_xlim(xmin=-xabs_max, xmax=xabs_max)
-
 plt.show()      
     
             

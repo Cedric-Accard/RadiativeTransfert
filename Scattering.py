@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 from skspatial.objects import Sphere
 
 plt.close('all')
+
+
 R=200  #Radius of the sphere
 
 pos=np.zeros((1,3))
@@ -62,7 +64,7 @@ while (norm<=R) :
                 pos[0,i]=pos[0,i]+dire[0,i]
 
             norm=np.sqrt(pos[0,0]**2+pos[0,1]**2+pos[0,2]**2)
-            ts=ts+(n*sigma + n*sigma)*dl/2
+            ts+=(n*sigma + n*sigma)*dl/2
             norm_arr=np.append(norm_arr,norm)
         else :
             break
@@ -73,9 +75,7 @@ while (norm<=R) :
         for i in range (0,3):
             pos2[0,i]=pos[0,i]-dire[0,i]
         
-
-        diffts=ts-ts2
-        ratio=(tau-ts2)/diffts
+        ratio=(tau-ts2)/(ts-ts2)
     
         for i in range (0,3):
             rightpos[0,i]=pos2[0,i]+ratio*dire[0,i]            
@@ -89,12 +89,10 @@ while (norm<=R) :
         for i in range (0,3):
             pos2[0,i]=pos[0,i]-dire[0,i]
         
-
-        diff_norm=norm-norm2
-        ratio_norm=(R-norm2)/diff_norm
+        ratio_norm=(R-norm2)/(norm-norm2)
     
         for i in range (0,3):
-            rightpos[0,i]=pos2[0,i]+ratio*dire[0,i]    
+            rightpos[0,i]=pos2[0,i]+ratio_norm*dire[0,i]    
         
         x2=np.append(x2,rightpos[0,0])
         y2=np.append(y2,rightpos[0,1]) 

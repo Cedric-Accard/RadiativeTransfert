@@ -26,7 +26,7 @@ z_trajectories=np.zeros(shape=(photons,R))
 n=1
 ## ####### ############ ##
 
-origin=[400,-300,600] #Source Origin 
+origin=[0,-0,0] #Source Origin 
 
 for j in range(photons) : #Propagating loop to be done for each photon
     
@@ -86,8 +86,8 @@ for j in range(photons) : #Propagating loop to be done for each photon
                 pos2[0,i]=pos[0,i]-dire[0,i]    #
             
     
-            diffts=ts-ts2
-            ratio=(tau-ts2)/diffts
+            ratio=(tau-ts2)/(ts-ts2)
+
         
             for i in range (0,3):
                 rightpos[0,i]=pos2[0,i]+ratio*dire[0,i] #Correction to the position to get forward as close as possible to the limit of the object             
@@ -102,9 +102,8 @@ for j in range(photons) : #Propagating loop to be done for each photon
                 pos2[0,i]=pos[0,i]-dire[0,i]    
             
     
-            diff_norm=norm-norm2            #Calculation to get the ratio of dire vector to add to the position to correct it
-            ratio_norm=(R-norm2)/diff_norm
-        
+            ratio_norm=(R-norm2)/(norm-norm2) # Calculation to get the ratio of dire vector to add to the position to correct it
+       
             for i in range (0,3):
                 rightpos[0,i]=pos2[0,i]+ratio_norm*dire[0,i]    #Correction to the position to get backward as close as possible to the limit of the object
             

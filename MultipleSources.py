@@ -198,7 +198,6 @@ colors3 = plt.cm.Greens(np.linspace(0, 1, photons))
 
 # Plotting trajectories
 for l in range(0,photons) : 
-    #ax.plot(x_trajectories[l,],y_trajectories[l,],z_trajectories[l,])
     ax.plot(x1[l,],y1[l,],z1[l,], color=colors1[l])
     ax.plot(x2[l,],y2[l,],z2[l,], color=colors2[l])
     ax.plot(x3[l,],y3[l,],z3[l,], color=colors3[l])
